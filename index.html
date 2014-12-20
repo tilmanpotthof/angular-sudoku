@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="sudokuApp">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>AngularJS Plunker</title>
+    <script>document.write('<base href="' + document.location + '" />');</script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="js/bower/angular/angular.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/sudokuController-controller.js"></script>
+    <script src="js/sudokuStorage-service.js"></script>
+    <script src="js/sudokuService-service.js"></script>
+    <script src="js/sudokuView-service.js"></script>
+    <script src="js/createUUID-service.js"></script>
+    <script src="js/measureTime-service.js"></script>
+    <script src="js/keypressHandler-directive.js"></script>
+  </head>
+
+  <body ng-controller="sudokuController" keypress-handler="sudokuView.handleKeypress($event)">
+    <p>
+      <select ng-model="currentSudoku" ng-change="updateSudoku()" ng-options="sudoku.name for sudoku in sudokuStorage.sudokus()" ng-disabled="inEditMode()"></select>
+    </p>
+    <p>
+      <button ng-click="sudokuModel.clear()">Clear</button>
+      <button ng-click="solveBacktracking()">Lösen (backtracking)</button>
+      <button ng-click="solveLogic()">Lösen (logisch)</button>
+      <input type="number" ng-model="sudokuModel.solutionLimit">
+      {{ time + (time != null ? 'ms' : '')  }}
+    </p>
+    <p>
+      <div ng-show="!inEditMode()">
+        <button ng-click="createSudoku()">Neue Sudoku erstellen</button>
+        <button ng-click="edit()" ng-disabled="!currentSudoku.editable">Sudoku bearbeiten</button>
+        <button ng-click="removeSudoku()" ng-disabled="!currentSudoku.editable">Sudoku löschen</button>
+      </div>
+      <div ng-show="inEditMode()">
+        <button ng-click="save()" >Sudoku speichern</button>
+        <button ng-click="cancel()">Abbrechen</button>
+        <input type="text" ng-model="currentSudoku.name"/>
+        <button ng-click="solveBacktrackingCount()">Lösungen zählen</button>
+        {{ (solutionCount != null ? 'Anzahl Lösungen: ' : '') + solutionCount }}
+        <p>
+          <button ng-click="sudokuModel.randomSudoku()">Random</button>
+          <input type="number" ng-model="sudokuModel.attemptLimit">
+          <input type="number" ng-model="sudokuModel.attempts" ng-disabled="true">
+          <input type="number" ng-model="sudokuModel.fieldCountGoal">
+          <input type="number" ng-model="sudokuModel.fieldsLeft" ng-disabled="true">
+        </p>
+      </div>
+
+
+    </p>
+    <div class="sudoku">
+      <div class="sudoku-row clearfix" ng-repeat="row in sudokuModel.rows">
+        <div class="sudoku-field"
+          ng-click="sudokuView.handleClick(field)"
+          ng-class="sudokuView.fieldClasses(field)"
+          ng-repeat="field in row">
+          {{ field.displayValue() }}
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>

@@ -1,0 +1,47 @@
+{
+	/* JSHINT Options - Further explanation: http://www.jshint.com/docs/options/ */
+
+	/* ENFORCING OPTIONS */
+	"bitwise": true, // prohibits bitwise operators to prevent '&&' vs '&' errors
+	"camelcase": true, // enforces camelCase or UPPER_CASE_WITH_UNDERSCORE in variables
+	"curly": true, // enforces { } around one line statements
+	"eqeqeq": true, // enforces === and !== over != and == (exception: == null see "eqnull")
+	"es3": false, // not needed (only for ie < 10)
+	"forin": true, // javascript for-in-loop is broken! prohibits its usage
+	"freeze": true, // prohibits extending prototype of native objects. NEVER DO SUCH EVIL SHIT!
+	"immed": true, // enforces parentheses around immediate functions
+	"indent": true, // one tab per indentation.
+	"latedef": true, // prohibits the use of a variable before it was defined
+	"newcap": true, // enforced capitalized names for constructor functions
+	"noarg": true, // prohibits the use of arguments.caller and arguments.callee
+	"noempty": true, // prohibits empty blocks
+	"nonew": true, // prohibits the use of constructor functions for side-effects
+	"plusplus": false, // Some people think that ++ and -- reduces the quality of their coding styles. WE DON'T!
+	"quotmark": false, // DON'T enforce consistent quotes
+	"undef": true, // prohibits the use of explicitly undeclared variables
+	// "unused": true, // warns when you define and never use your variables
+	"strict": true, // enforce strict mode
+
+	/* QUALITY RESTRICTIONS */
+	"maxparams": 6, // should be reduced over time (GOAL: 6)
+	"maxdepth": 5, // controls how deep blocks are nested (GOAL: 3 or 4)
+	"maxstatements": 30, // controls number of statements (GOAL: 20 or 30)
+	"maxcomplexity": 5, // controls the cyclomatic complexity (GOAL: 4 or 5)
+	"maxlen": 180, // controls the line length (GOAL: 180)
+
+	/* RELAXING RESTRICTIONS */
+	"eqnull": true,
+
+	/*
+	 * ENVIRONMENTS AND PREDEFINED GLOBALS
+	 */
+	"browser": true,
+	"jquery": true,
+	"globals": {
+		/* IMPORTANT: false means read-only */
+		"angular": false,
+		"moment": false,
+		"confirm": false,
+		"alert": false
+	}
+}

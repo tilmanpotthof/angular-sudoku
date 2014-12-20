@@ -1,0 +1,67 @@
+* {
+  font-family: sans-serif;
+}
+
+input[type='number'] {
+  width: 50px;
+}
+
+.sudoku-field {
+  font-size: 18px;
+  float: left;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #666;
+  text-align: center;
+  line-height: 50px;
+}
+
+.sudoku-row {
+  width: 456px;
+}
+
+.sudoku-row:after {
+  /* clearfix */
+  content: ".";
+  clear: both;
+  display: block;
+  visibility: hidden;
+  height: 0px;
+}
+
+.sudoku-row:nth-child(1),
+.sudoku-row:nth-child(3n+1) {
+  border-top: 2px solid #666;
+}
+.sudoku-row:nth-child(3n) {
+  border-bottom: 2px solid #666;
+}
+.sudoku-field:nth-child(3n+1),
+.sudoku-field:nth-child(1) {
+  border-left: 2px solid #666;
+}
+.sudoku-field:nth-child(3n) {
+  border-right: 2px solid #666;
+}
+
+.sudoku-field.fixed-field {
+  background-color: #DDD;
+}
+.sudoku-field.fixed-field.selected {
+  background-color: #69B;
+}
+.sudoku-field.fixed-field.wrong {
+  background-color: #B66;
+}
+.sudoku-field.selected {
+    background-color: #BEF;
+}
+.sudoku-field.wrong {
+    background-color: #FBB;
+}
+.sudoku-field.selected {
+    background-color: #BEF;
+}
+.sudoku-field.wrong.selected {
+    background-color: #B9B;
+}
