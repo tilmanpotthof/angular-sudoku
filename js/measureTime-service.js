@@ -1,9 +1,8 @@
-angular.module('sudokuApp').factory('measureTime', function() {
+angular.module('sudokuApp').factory('measureTime', function () {
   "use strict";
-  function measureTime (fn) {
+  return   function measureTime(fn) {
     var startTime = (new Date()).valueOf();
     fn();
     return (new Date()).valueOf() - startTime;
-  }
-  return measureTime;
+  };
 });

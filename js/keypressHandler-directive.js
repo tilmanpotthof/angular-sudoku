@@ -1,6 +1,5 @@
 angular.module('sudokuApp').directive('keypressHandler', function () {
   "use strict";
-
   return {
     restrict: "A",
     scope: true,
@@ -13,6 +12,3 @@ angular.module('sudokuApp').directive('keypressHandler', function () {
     }
   };
 });
-
-
-

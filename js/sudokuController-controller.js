@@ -1,26 +1,21 @@
-angular.module('sudokuApp').controller('sudokuController', function ($scope, sudokuService, sudokuView, sudokuStorage, measureTime) {
+angular.module('sudokuApp').controller('sudokuController', function ($scope, sudokuService, sudokuView, sudokuStorage, measureTime, $location) {
   "use strict";
-
-  $scope.inEditMode = function() {
+  $scope.inEditMode = function () {
     return $scope.sudokuView.editFixedValues;
   };
-
   $scope.createSudoku = function () {
     $scope.sudokuView.editFixedValues = true;
     $scope.currentSudoku = sudokuStorage.create("");
   };
-
   $scope.removeSudoku = function () {
     if ($scope.currentSudoku.editable && confirm("Möchten Sie das Sudoku '" + $scope.currentSudoku.name + "' wirklich löschen?")) {
       sudokuStorage.removeSudoku($scope.currentSudoku);
       $scope.currentSudoku = sudokuStorage.sudokus()[0];
     }
   };
-
   $scope.edit = function () {
     $scope.sudokuView.editFixedValues = true;
   };
-
   $scope.save = function () {
     $scope.sudokuView.editFixedValues = false;
     $scope.currentSudoku.rows = $scope.sudokuModel.visitMap(function (field) {

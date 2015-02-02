@@ -1,20 +1,21 @@
 angular.module('sudokuApp').factory('sudokuStorage', function (createUUID) {
   "use strict";
-
   var STORAGE_KEY = "com.programmingisart.sudoku";
-
-  var emptySudoku = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0]
-  ];
-
+  var CELL_DELIMITER = "";
+  var ROW_DELIMITER = "|";
+  function serialize(sudokuRows) {
+    return sudokuRows.map(function (row) {
+      return row.join(CELL_DELIMITER);
+    }).join(ROW_DELIMITER);
+  }
+  function deserialize(sudokuRows) {
+    return sudokuRows.split(ROW_DELIMITER).map(function (row) {
+      return row.split(CELL_DELIMITER).map(function (value) {
+        return parseInt(value, 10);
+      });
+    });
+  }
+  var emptySudoku = deserialize("000000000|000000000|000000000|000000000|000000000|000000000|000000000|000000000|000000000");
   var privateStorage = {
     sudokus: {},
     loadFromStorage: function () {
@@ -27,24 +28,21 @@ angular.module('sudokuApp').factory('sudokuStorage', function (createUUID) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.sudokus));
     }
   };
-
   function Sudoku(name, rows, options) {
-    this.uuid = createUUID();
-    this.name = name;
-    this.rows = rows;
-    this.editable = true;
+    angular.extend(this, {uuid: createUUID(), name: name, rows: rows, editable: true});
     angular.extend(this, options);
   }
-
   var sudokuStorage = {
     create: function (name, rows, options) {
       rows = rows || angular.copy(emptySudoku);
       var sudoku = new Sudoku(name, rows, options);
-      this.saveSudoku(sudoku);
+      privateStorage.sudokus[sudoku.uuid] = sudoku;
       return sudoku;
     },
-    saveSudoku: function (sudoku) {
-      privateStorage.sudokus[sudoku.uuid] = sudoku;
+    get: function (uuid) {
+      return privateStorage.sudokus[uuid];
+    },
+    saveSudoku: function () {
       privateStorage.saveToStorage();
     },
     removeSudoku: function (sudoku) {
@@ -57,58 +55,15 @@ angular.module('sudokuApp').factory('sudokuStorage', function (createUUID) {
       });
     }
   };
-
   privateStorage.loadFromStorage();
-
   if (sudokuStorage.sudokus().length === 0) {
     sudokuStorage.create("Leeres Sudoku", undefined, {editable: false});
-    sudokuStorage.create("Sudoku 1", [
-      [9, 0, 0, 0, 0, 0, 0, 0, 6],
-      [0, 0, 6, 7, 0, 3, 2, 0, 0],
-      [0, 2, 0, 6, 0, 8, 0, 5, 0],
-      [0, 1, 7, 0, 0, 0, 6, 9, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 5, 2, 0, 0, 0, 8, 3, 0],
-      [0, 8, 0, 5, 0, 4, 0, 6, 0],
-      [0, 0, 5, 9, 0, 7, 3, 0, 0],
-      [1, 0, 0, 0, 0, 0, 0, 0, 8]
-    ]);
-    sudokuStorage.create("Sudoku 2", [
-      [0, 4, 5, 0, 8, 7, 0, 6, 9],
-      [0, 8, 9, 1, 3, 0, 0, 0, 2],
-      [0, 2, 0, 0, 4, 0, 0, 3, 0],
-      [0, 0, 0, 8, 0, 2, 0, 1, 3],
-      [0, 7, 0, 0, 0, 0, 2, 0, 4],
-      [0, 0, 0, 0, 0, 1, 0, 0, 6],
-      [2, 0, 3, 0, 0, 0, 0, 0, 0],
-      [0, 1, 8, 0, 0, 6, 5, 0, 0],
-      [9, 0, 0, 5, 0, 0, 0, 4, 0]
-    ]);
-    sudokuStorage.create("Sudoku 3", [
-      [0, 0, 0, 0, 0, 0, 5, 0, 0],
-      [3, 0, 0, 7, 1, 0, 6, 0, 0],
-      [2, 0, 1, 8, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 5, 0, 0, 4, 0],
-      [0, 8, 0, 0, 0, 9, 0, 0, 0],
-      [0, 9, 0, 3, 0, 2, 0, 7, 0],
-      [0, 0, 2, 0, 6, 0, 0, 0, 4],
-      [0, 0, 4, 0, 7, 0, 0, 0, 1],
-      [0, 0, 7, 0, 9, 3, 0, 0, 6]
-    ]);
-    sudokuStorage.create("Sudoku 4", [
-      [0, 6, 3, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 2, 0, 8, 0, 0, 1],
-      [0, 0, 0, 0, 0, 9, 0, 5, 2],
-      [8, 0, 0, 6, 0, 0, 0, 0, 0],
-      [5, 9, 0, 8, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 7, 5],
-      [0, 0, 0, 0, 7, 0, 0, 4, 0],
-      [0, 3, 0, 0, 0, 0, 9, 1, 0],
-      [0, 5, 7, 0, 3, 0, 0, 0, 0]
-    ]);
+    sudokuStorage.create("Sudoku 1", deserialize("900000006|006703200|020608050|017000690|000000000|052000830|080504060|005907300|100000008"));
+    sudokuStorage.create("Sudoku 2", deserialize("045087069|089130002|020040030|000802013|070000204|000001006|203000000|018006500|900500040"));
+    sudokuStorage.create("Sudoku 3", deserialize("000000500|300710600|201800000|000050040|080009000|090302070|002060004|004070001|007093006"));
+    sudokuStorage.create("Sudoku 4", deserialize("063000000|000208001|000009052|800600000|590800000|000000075|000070040|030000910|057030000"));
+    sudokuStorage.saveSudoku();
   }
-
-
   return sudokuStorage;
 });
 

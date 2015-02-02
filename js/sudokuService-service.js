@@ -1,13 +1,7 @@
 angular.module('sudokuApp').factory('sudokuService', function (createUUID, $log, sudokuStorage) {
   "use strict";
-
   function SudokuField(value, x, y) {
-    this.x = x;
-    this.y = y;
-    this._value = value;
-    if (1 <= value && value <= 9) {
-      this.fixedValue = true;
-    }
+    angular.extend(this, {x: x, y: y, _value: value, fixedValue: 1 <= value && value <= 9})
   }
 
   //@ http://jsfromhell.com/array/shuffle [v1.0]
@@ -68,34 +62,27 @@ angular.module('sudokuApp').factory('sudokuService', function (createUUID, $log,
       });
     },
     solution: function (x, y) {
+      var self = this;
       var possibilities = this.possibilities(x, y);
       if (possibilities.length === 1) {
         return possibilities[0];
       }
-      for (var iPos = 0; iPos < possibilities.length; iPos++) {
-        var positions = [];
-        var iX, iY;
-        var possibility = possibilities[iPos];
-        var horizontal = true;
-        var vertical = true;
-        var field3x3 = true;
+      var currentPossibility;
+      var foundMatch = possibilities.some(function (possibility) {
+        currentPossibility = possibility;
+        var iX, iY, horizontal, vertical, field3x3;
+        horizontal = vertical = field3x3 = true;
         for (var i = 0; i < 9; i++) {
-          if (vertical && this.get(x, i)[possibility] && i !== y) {
-            vertical = false;
-          }
-          if (horizontal && this.get(i, y)[possibility] && i !== x) {
-            horizontal = false;
-          }
-
+          vertical = vertical && self.get(x, i)[possibility] && i !== y;
+          horizontal = horizontal && self.get(i, y)[possibility] && i !== x;
           iX = (Math.floor(x / 3) * 3) + i % 3;
           iY = (Math.floor(y / 3) * 3) + Math.floor(i / 3);
-          if (field3x3 && this.get(iX, iY)[possibility] && !(x === iX && y === iY)) {
-            field3x3 = false;
-          }
+          field3x3 = field3x3 && self.get(iX, iY)[possibility] && !(x === iX && y === iY);
         }
-        if (horizontal || vertical || field3x3) {
-          return possibility;
-        }
+        return horizontal || vertical || field3x3;
+      });
+      if (foundMatch) {
+        return currentPossibility;
       }
     },
     solveStep: function (field) {
@@ -341,4 +328,3 @@ angular.module('sudokuApp').factory('sudokuService', function (createUUID, $log,
   sudokuService.Sudoku = Sudoku;
   return sudokuService;
 });
-
