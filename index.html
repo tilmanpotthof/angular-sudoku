@@ -41,11 +41,15 @@
         <button ng-click="solveBacktrackingCount()">Lösungen zählen</button>
         {{ (solutionCount != null ? 'Anzahl Lösungen: ' : '') + solutionCount }}
         <p>
-          <button ng-click="sudokuModel.randomSudoku()">Random</button>
           <input type="number" ng-model="sudokuModel.attemptLimit">
-          <input type="number" ng-model="sudokuModel.attempts" ng-disabled="true">
+          <small>Versuchslimit</small>
+          <small>{{ sudokuModel.attempts }}</small>
+          <br/>
           <input type="number" ng-model="sudokuModel.fieldCountGoal">
-          <input type="number" ng-model="sudokuModel.fieldsLeft" ng-disabled="true">
+          <small>Übrige Felder (Ziel)</small>
+          <small>{{ sudokuModel.fieldsLeft }}</small>
+          <br/>
+          <button ng-click="sudokuModel.randomSudoku()">Random</button>
         </p>
       </div>
 
