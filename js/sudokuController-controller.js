@@ -23,34 +23,35 @@ angular.module('sudokuApp').controller('sudokuController', function ($scope, sud
     });
     sudokuStorage.saveSudoku($scope.currentSudoku);
   };
-
   $scope.cancel = function () {
     $scope.sudokuView.editFixedValues = false;
   };
-
-  $scope.currentSudoku = sudokuStorage.sudokus()[0];
-
-  $scope.sudokuView = sudokuView;
-  $scope.sudokuStorage = sudokuStorage;
-
   $scope.updateSudoku = function () {
     var sudokuModel = sudokuService.createSudoku($scope.currentSudoku.rows);
     $scope.sudokuModel = sudokuView.sudoku(sudokuModel);
   };
-
-  $scope.solveBacktracking = function () {
-    $scope.time = measureTime($scope.sudokuModel.solveBacktracking.bind($scope.sudokuModel));
-  };
-
   $scope.solveLogic = function () {
     $scope.time = measureTime($scope.sudokuModel.solveLogic.bind($scope.sudokuModel));
   };
-
+  $scope.solveBacktracking = function () {
+    $scope.time = measureTime($scope.sudokuModel.solveBacktracking.bind($scope.sudokuModel));
+  };
   $scope.solveBacktrackingCount = function () {
     $scope.time = measureTime(function () {
       $scope.solutionCount = $scope.sudokuModel.solveBacktrackingCount();
     });
   };
-
+  $scope.$watch("currentSudoku", function () {
+    $location.url($scope.currentSudoku.uuid);
+  });
+  var UUID_REGEX = /^\/[0-f]{8}-[0-f]{4}-[0-f]{4}-[0-f]{4}-[0-f]{12}$/;
+  if ($location.url().match(UUID_REGEX)) {
+    var uuid = $location.url().slice(1);
+    $scope.currentSudoku = sudokuStorage.get(uuid);
+  } else {
+    $scope.currentSudoku = sudokuStorage.sudokus()[0];
+  }
+  $scope.sudokuView = sudokuView;
+  $scope.sudokuStorage = sudokuStorage;
   $scope.updateSudoku();
 });
