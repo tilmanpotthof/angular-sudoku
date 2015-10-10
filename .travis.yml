@@ -1,0 +1,18 @@
+language: node_js
+
+sudo: false
+
+node_js:
+  - '4.1'
+
+before_script:
+  - 'npm install -g codeclimate-test-reporter'
+
+script: grunt default coveralls
+
+after_script:
+  - cat generated/reports/coverage/lcov/*/lcov.info | codeclimate
+
+addons:
+  code_climate:
+    repo_token: c1ef296970b9778de133b224c572544741967fa4668f6f85a58fb8963f39d3a6

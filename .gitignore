@@ -1,5 +1,23 @@
-/.idea/
-/js/bower/
+# generated
+generated/
+*.log
+
+# dependencies
+node/
+node_modules/
+
+# os
+.DS_Store
+
+# emacs
 *~
 .*~
 
+# eclipse
+.settings
+.classpath
+.project
+
+# idea
+*.iml
+.idea/
